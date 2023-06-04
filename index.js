@@ -1,9 +1,12 @@
 require('dotenv').config();
 
 const TelegramBot = require('node-telegram-bot-api');
-const { contactMarkup, markupWrapper, agreeMarkup } = require('./makups');
-
 const bot = new TelegramBot(process.env.TOKEN, {polling: true});
+
+const { contactMarkup, markupWrapper, agreeMarkup } = require('./makups');
+const {welcome_text,successfully_added,reg_end,failed_to_locate,welcome_again} = require("./text_replies.json");
+const getLocation = require('./services/getLocation');
+const commands = require('./commands');
 
 let PREV_MESSAGE = "";
 
@@ -18,32 +21,31 @@ bot.on("message",async (msg,match)=>{
             })
             if(!registrated){
                 DB.push({id:msg.chat.username})
-                bot.sendMessage(msg.chat.id,`Hi there👋\nWelcome to hotel manager bot,now send me information about your location and your contact!`,markupWrapper(contactMarkup));
+                bot.sendMessage(msg.chat.id,welcome_text,markupWrapper(contactMarkup));
             }else{
-                bot.sendMessage(msg.chat.id,`Nice to see you again👋\nYou know what to do!`,markupWrapper(contactMarkup));
+                bot.sendMessage(msg.chat.id,welcome_again,markupWrapper(contactMarkup));
             }
             PREV_MESSAGE = "SCALI";
         }
         
         if (PREV_MESSAGE === "SCALI" && msg.hasOwnProperty("location")){
-            const resp = await (await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${msg.location.latitude}&longitude=${msg.location.longitude}&localityLanguage=en`)).json();
-            const location = resp.localityInfo.administrative[0].name+","+resp.city+","+resp.locality;
-            bot.sendMessage(msg.chat.id,location);
+            bot.sendMessage(msg.chat.id,getLocation(msg.location));
             DB.forEach(user=>{
                 if(user.id === msg.chat.username){
                     user.location = location;
                 }
             })
         }
+
         if(PREV_MESSAGE === "SCALI" && msg.hasOwnProperty("contact")){
-            bot.sendMessage(msg.chat.id,"Your contact info has been added!")
+            bot.sendMessage(msg.chat.id,successfully_added)
             DB.forEach(user=>{
                 if(user.id === msg.chat.username){
                     user.contact = msg.contact;
                 }
             })
         }
-        if(msg.text === "if you already added info about you,click here"){
+        if(msg.text === reg_end && PREV_MESSAGE === "SCALI"){
             let isUserAddedAll = false;
             DB.forEach(user => {
                 if(user.id === msg.chat.username){
@@ -53,7 +55,9 @@ bot.on("message",async (msg,match)=>{
             if(isUserAddedAll){
                 bot.sendMessage(msg.chat.id,"You are registered in hotel Grand Turismo in room 403,is it right?",markupWrapper(agreeMarkup))
             }else{
-                bot.sendMessage(msg.chat.id,"It is not enough info about you(",markupWrapper(contactMarkup))
+                bot.sendMessage(msg.chat.id,failed_to_locate,markupWrapper(contactMarkup))
             }
         }
 })
+
+bot.setMyCommands(commands)

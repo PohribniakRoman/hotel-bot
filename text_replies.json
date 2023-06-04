@@ -1,0 +1,9 @@
+{
+    "welcome_text":"Hi there👋\nWelcome to hotel manager bot,now send me information about your location and your contact!",
+    "welcome_again":"Nice to see you again👋\nYou know what to do!",
+    "share_contact":"Share my contact info",
+    "share_location":"Share my location info",
+    "successfully_added":"Info about you has been successfully added!",
+    "reg_end":"if you already added info about you,click here",
+    "failed_to_locate":"It is not enough info about you("
+}

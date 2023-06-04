@@ -1,3 +1,5 @@
+const {share_contact,share_location} = require("./text_replies.json")
+
 const markupDefultSettings = {
     one_time_keyboard:true,
     resize_keyboard:true,
@@ -10,14 +12,14 @@ const markupWrapper = (markup) =>{
 }
 
 const contactMarkup = {
-    ...markupDefultSettings,
+    resize_keyboard:true,
     keyboard: [[{
-                text: "Share my location info",
+                text: share_location,
                 request_location:true,
     }],[{
-        text: "Share my contact info",
+        text: share_contact,
         request_contact: true
-    }], ["if you already added info about you,click here"]]
+    }], [{text:"if you already added info about you,click here",hide_keyboard:true}]]
 };
 
 const agreeMarkup = {
