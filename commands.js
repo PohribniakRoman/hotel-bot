@@ -4,4 +4,7 @@ module.exports = [{
 },{
     command:"menu",
     description:"Gives you dishes menu."
+},{
+    command:"startconv",
+    description:"Start conversation."
 }]

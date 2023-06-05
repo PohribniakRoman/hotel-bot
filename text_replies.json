@@ -1,5 +1,8 @@
 {
-    "welcome_text":"Hi there👋\nWelcome to hotel manager bot,now send me information about your location and your contact!",
+    "welcome_text":"Hi there👋\nLocation - ❌\nContact info - ❌\nWelcome to hotel manager bot,now send me information about your location and your contact!",
+    "welcome_text_success_contact":"\nLocation - ❌\nContact info - ✅\n",
+    "welcome_text_success_location":"\nLocation - ✅\nContact info  - ❌\n",
+    "welcome_text_success_all":"Location - ✅\nContact info - ✅\n",
     "welcome_again":"Nice to see you again👋\nYou know what to do!",
     "share_contact":"Share my contact info",
     "share_location":"Share my location info",
